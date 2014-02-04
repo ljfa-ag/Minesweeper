@@ -83,7 +83,7 @@ public:
      * The specified number of mines is randomly placed across the field,
      * but the cell (\c startr, \c startc) is left open.
      */
-    template<class RNG> void init(unsigned int mines, RNG& rng, int startr = -1, int startc = -1);
+    template<class RNG> void rand_init(unsigned int mines, RNG& rng, int startr = -1, int startc = -1);
 
     ///Returns the number of rows
     int rows() const { return mRows; }
@@ -174,7 +174,7 @@ private:
 
 std::ostream& operator<<(std::ostream& os, const Minesweeper& ms);
 
-template<class RNG> void Minesweeper::init(unsigned int mines, RNG& rng, int startr, int startc)
+template<class RNG> void Minesweeper::rand_init(unsigned int mines, RNG& rng, int startr, int startc)
 {
     if(mines >= cells())
         throw std::out_of_range("The number of mines must be smaller than the number of cells");

@@ -142,7 +142,7 @@ bool MineCursesApp::make_move()
     if(ms->state() == Minesweeper::GameState::uninitialized)
     {
         boost::random::mt11213b rng(std::time(nullptr));
-        ms->init(mines, rng, ci, cj);
+        ms->rand_init(mines, rng, ci, cj);
     }
     if(ms->click(ci, cj))
     {

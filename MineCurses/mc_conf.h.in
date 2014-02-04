@@ -1,0 +1,6 @@
+#ifndef MC_CONF_H_INCLUDED
+#define MC_CONF_H_INCLUDED
+
+#cmakedefine MC_WITH_MOUSE
+
+#endif

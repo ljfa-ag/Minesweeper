@@ -6,7 +6,7 @@ and provides an interface for making game moves.
 
 # MineCurses
 A simple minesweeper game using libminesweeper and ncurses. You can specify the field
-size and the number of mines at the beginning of the game.
+size and the number of mines at the beginning of the game. Use the arrow keys to navigate,
+the return key to make a move and the space bar to set a flag.
 
-It also supports mouse input by defining MC_WITH_MOUSE, though that may be bugged
-on some implementations of ncurses.
+It also supports mouse input, though that may be bugged on some implementations of ncurses.

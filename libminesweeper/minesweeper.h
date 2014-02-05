@@ -27,7 +27,8 @@
 
 #include <boost/random/uniform_smallint.hpp>
 
-/** \brief Class for representing a Minesweeper game state */
+/** \brief Class for representing a Minesweeper game state
+ * \note Methods beginning with \c p_ are "cheating functions". */
 class Minesweeper
 {
 public:
@@ -46,6 +47,10 @@ public:
         bool p_mine() const { return mMine; }
         ///Returns the number of mines in the adjacent cells
         int p_adjacents() const { return mAdjacents; }
+        ///Sets whether the cell contains a mine
+        void p_set_mine(bool mine) { mMine = mine; }
+        ///Sets whether the cell is uncovered
+        void p_set_visible(bool visible) { mVisible = visible; }
 
     private:
         bool mMine;
@@ -73,7 +78,7 @@ public:
     /// \throw std::out_of_range if rows or cols is negative
     Minesweeper(int rows, int cols);
 
-    /** \brief Initializes the minefield
+    /** \brief Initializes the minefield with randomly placed mines
      * \param mines The number of mines
      * \param rng A boost::random generator
      * \param startr The row of the starting position
@@ -84,6 +89,13 @@ public:
      * but the cell (\c startr, \c startc) is left open.
      */
     template<class RNG> void rand_init(unsigned int mines, RNG& rng, int startr = -1, int startc = -1);
+
+    /** \brief Initializes the game
+     *
+     * Computes the number of covered cells and the number of adjacent mines for each cell
+     * and sets the \ref state to running.
+     */
+    void init();
 
     ///Returns the number of rows
     int rows() const { return mRows; }
@@ -172,6 +184,7 @@ private:
     bool p_uncover(int i, int j);
 };
 
+///Prints out the field
 std::ostream& operator<<(std::ostream& os, const Minesweeper& ms);
 
 template<class RNG> void Minesweeper::rand_init(unsigned int mines, RNG& rng, int startr, int startc)
@@ -180,8 +193,6 @@ template<class RNG> void Minesweeper::rand_init(unsigned int mines, RNG& rng, in
         throw std::out_of_range("The number of mines must be smaller than the number of cells");
     if(mState != GameState::uninitialized)
         throw std::runtime_error("The field has already been initialized");
-
-    mCovered = cells() - mines;
 
     boost::random::uniform_smallint<int> rdist(0, mRows-1), cdist(0, mCols-1);
     for(; mines > 0; --mines)
@@ -195,18 +206,8 @@ template<class RNG> void Minesweeper::rand_init(unsigned int mines, RNG& rng, in
         } while((i == startr && j == startc) || cell(i, j).mMine);
         cell(i, j).mMine = true;
     }
-    for(int i = 0; i < mRows; ++i)
-    for(int j = 0; j < mCols; ++j)
-    {
-        if(cell(i, j).mMine)
-            continue;
-        //Compute the number of mines in the neighbor fields
-        int adj = 0;
-        for_each_nb_in_range(i, j, [&](int k, int l)
-            { adj += try_get_cell(k, l).mMine; });
-        cell(i, j).mAdjacents = adj;
-    }
-    mState = GameState::running;
+
+    init();
 }
 
 template<class Func> void Minesweeper::for_each_nb_in_range(int i, int j, Func f)

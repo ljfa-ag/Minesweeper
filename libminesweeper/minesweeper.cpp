@@ -47,6 +47,27 @@ Minesweeper::Minesweeper(int rows, int cols):
         throw std::out_of_range("The number of rows and columns must be positive");
 }
 
+void Minesweeper::init()
+{
+    unsigned int mines;
+    for(int i = 0; i < mRows; ++i)
+    for(int j = 0; j < mCols; ++j)
+    {
+        if(cell(i, j).mMine)
+        {
+            ++mines;
+            continue;
+        }
+        //Compute the number of mines in the neighbor fields
+        int adj = 0;
+        for_each_nb_in_range(i, j, [&](int k, int l)
+            { adj += try_get_cell(k, l).mMine; });
+        cell(i, j).mAdjacents = adj;
+    }
+    mCovered = cells() - mines;
+    mState = GameState::running;
+}
+
 bool Minesweeper::in_range(int i, int j) const
 {
     return 0 <= i && i < mRows && 0 <= j && j < mCols;

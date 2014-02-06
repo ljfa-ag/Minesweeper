@@ -175,8 +175,8 @@ private:
     ///The number of covered fields
     unsigned int mCovered;
 
-    ///Recursively uncovers (\c i, \c j) and its neigbors if the number of adjacents is 0.
-    void p_rec_uncover(int i, int j);
+    ///Recursively uncovers all the cells' neigbors where the number of adjacents is 0.
+    void p_rec_uncover();
 
     /** \brief Uncovers the cell (\c i, \c j).
      * \return \c true if the cell was not covered before.
@@ -212,11 +212,26 @@ template<class RNG> void Minesweeper::rand_init(unsigned int mines, RNG& rng, in
 
 template<class Func> void Minesweeper::for_each_nb_in_range(int i, int j, Func f)
 {
-    for_each_nb(i, j, [&](int k, int l)
+    if(i > 0)
     {
-        if(in_range(k, l))
-            f(k, l);
-    });
+        f(i-1, j);
+        if(j > 0)
+            f(i-1, j-1);
+        if(j < mCols-1)
+            f(i-1, j+1);
+    }
+    if(i < mRows-1)
+    {
+        f(i+1, j);
+        if(j > 0)
+            f(i+1, j-1);
+        if(j < mCols-1)
+            f(i+1, j+1);
+    }
+    if(j > 0)
+        f(i, j-1);
+    if(j < mCols-1)
+        f(i, j+1);
 }
 
 template<class Func> void Minesweeper::for_each_nb(int i, int j, Func f)

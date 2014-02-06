@@ -100,15 +100,28 @@ bool Minesweeper::uncover(int i, int j)
         mState = GameState::loss;
         return false;
     }
-    p_rec_uncover(i, j);
+    if(p_uncover(i, j) && cell(i, j).mAdjacents == 0)
+        p_rec_uncover();
     return true;
 }
 
-void Minesweeper::p_rec_uncover(int i, int j)
+void Minesweeper::p_rec_uncover()
 {
-    if(!p_uncover(i, j) || cell(i, j).mAdjacents != 0)
+    /*if(!p_uncover(i, j) || cell(i, j).mAdjacents != 0)
         return;
-    for_each_nb_in_range(i, j, [this](int k, int l){ p_rec_uncover(k, l); });
+    for_each_nb_in_range(i, j, [this](int k, int l){ p_rec_uncover(k, l); });*/
+    bool cont;
+    do
+    {
+        cont = false;
+        for(int i = 0; i < mRows; ++i)
+        for(int j = 0; j < mCols; ++j)
+        {
+            if(!cell(i, j).mVisible || cell(i, j).mAdjacents != 0)
+                continue;
+            for_each_nb_in_range(i, j, [&](int k, int l){ cont = p_uncover(k, l) || cont; });
+        }
+    } while(cont);
 }
 
 bool Minesweeper::p_uncover(int i, int j)

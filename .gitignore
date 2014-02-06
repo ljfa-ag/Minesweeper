@@ -5,6 +5,7 @@ cons-minesweeper.cpp
 *.depend
 mc_conf.h
 doxygen/html
+MineSolver
 
 #################
 ## Eclipse

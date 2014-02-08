@@ -73,17 +73,17 @@ bool Minesweeper::in_range(int i, int j) const
     return 0 <= i && i < mRows && 0 <= j && j < mCols;
 }
 
-Minesweeper::CellEntry& Minesweeper::cell(int i, int j)
+auto Minesweeper::cell(int i, int j) -> CellEntry&
 {
     return mData[i*mCols + j];
 }
 
-const Minesweeper::CellEntry& Minesweeper::cell(int i, int j) const
+auto Minesweeper::cell(int i, int j) const -> const CellEntry&
 {
     return mData[i*mCols + j];
 }
 
-Minesweeper::CellEntry Minesweeper::try_get_cell(int i, int j) const
+auto Minesweeper::try_get_cell(int i, int j) const -> CellEntry
 {
     if(in_range(i, j))
         return cell(i, j);
@@ -107,9 +107,6 @@ bool Minesweeper::uncover(int i, int j)
 
 void Minesweeper::p_rec_uncover()
 {
-    /*if(!p_uncover(i, j) || cell(i, j).mAdjacents != 0)
-        return;
-    for_each_nb_in_range(i, j, [this](int k, int l){ p_rec_uncover(k, l); });*/
     bool cont;
     do
     {

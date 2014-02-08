@@ -161,7 +161,7 @@ public:
     void p_print(std::ostream& os) const;
 
     ///Calls \c f for each neighbor of (\c i, \c j) in the field
-    template<class Func> void for_each_nb_in_range(int i, int j, Func f);
+    template<class Func> void for_each_nb_in_range(int i, int j, Func f) const;
 
     /** \brief Calls \c f for each neighbor of (\c i, \c j) including those outside of the field
      * \note this is a static function unlike for_each_nb_in_range().
@@ -210,7 +210,7 @@ template<class RNG> void Minesweeper::rand_init(unsigned int mines, RNG& rng, in
     init();
 }
 
-template<class Func> void Minesweeper::for_each_nb_in_range(int i, int j, Func f)
+template<class Func> void Minesweeper::for_each_nb_in_range(int i, int j, Func f) const
 {
     if(i > 0)
     {

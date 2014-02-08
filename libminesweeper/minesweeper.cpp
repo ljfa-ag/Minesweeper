@@ -142,7 +142,7 @@ bool Minesweeper::uncover_if_unmarked(int i, int j)
         return false;
 }
 
-bool Minesweeper::uncover_around(int i, int j)
+bool Minesweeper::chord(int i, int j)
 {
     if(!cell(i, j).mVisible)
         return false;
@@ -154,15 +154,24 @@ bool Minesweeper::uncover_around(int i, int j)
     //True is returned if at least one cell has been uncovered.
     bool ret = false;
     for_each_nb_in_range(i, j, [this, &ret](int k, int l){ ret = uncover_if_unmarked(k, l) || ret; });
-    /* Must write "uncover_if_unmarked(k, l) || ret" and not "ret || uncover_if_unmarked(k, l)"
-    because of short circuit evaluation */
+    return ret;
+}
+
+bool Minesweeper::chord_all()
+{
+    bool ret = false;
+    for(int i = 0; i < mRows; ++i)
+    for(int j = 0; j < mCols; ++j)
+    {
+        ret = chord(i, j) || ret;
+    }
     return ret;
 }
 
 bool Minesweeper::click(int i, int j)
 {
     if(cell(i, j).mVisible)
-        return uncover_around(i, j);
+        return chord(i, j);
     else
         return uncover_if_unmarked(i, j);
 }

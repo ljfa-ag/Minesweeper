@@ -124,30 +124,35 @@ public:
      */
     const CellEntry& cell(int i, int j) const;
 
-    /// Returns the cell (\c i, \c j) if it is in range, or an empty cell (i.e. \c CellEntry()) otherwise
+    ///Returns the cell (\c i, \c j) if it is in range, or an empty cell (i.e. \c CellEntry()) otherwise
     CellEntry try_get_cell(int i, int j) const;
 
     /** \brief Makes a move at (\c i, \c j).
-     * \return \c true if a field has been uncovered
+     * \return \c true if at least one cell has been uncovered
      */
     bool uncover(int i, int j);
 
     /** \brief Makes a move at (\c i, \c j) if the cell is unmarked
-     * \return \c true if a field has been uncovered
+     * \return \c true if at least one cell has been uncovered
      */
     bool uncover_if_unmarked(int i, int j);
 
     /** \brief Uncovers (i.e. makes a move) the fields around (\c i, \c j)
-     * \return \c true if a field has been uncovered
+     * \return \c true if at least one cell has been uncovered
      *
      * If the number of mines around (\c i, \c j) equals the number of marked cells
      * around this cell, then the unmarked fields around it are uncovered.
      * This requires (\c i, \c j) to already be uncovered.
      */
-    bool uncover_around(int i, int j);
+    bool chord(int i, int j);
 
-    /** \brief Calls uncover_if_unmarked() if (\c i, \c j) is visible and uncover_around() else
-     * \return \c true if a field has been uncovered
+    /** \brief Chords around all fully flagged cells
+     * \return \c true if at least one cell has been uncovered
+     */
+    bool chord_all();
+
+    /** \brief Calls uncover_if_unmarked() if (\c i, \c j) is visible and chord() else
+     * \return \c true if at least one cell has been uncovered
      */
     bool click(int i, int j);
 
@@ -160,11 +165,16 @@ public:
     ///Prints out the field, including the covered cells
     void p_print(std::ostream& os) const;
 
-    ///Calls \c f for each neighbor of (\c i, \c j) in the field
+    /** \brief Calls \c f for each neighbor of (\c i, \c j) in the field
+     * \sa for_each_nb()
+     */
     template<class Func> void for_each_nb_in_range(int i, int j, Func f) const;
 
     /** \brief Calls \c f for each neighbor of (\c i, \c j) including those outside of the field
      * \note this is a static function unlike for_each_nb_in_range().
+     *
+     * f should have the following signature:
+     * \code void f(int i, int j) \endcode
      */
     template<class Func> static void for_each_nb(int i, int j, Func f);
 

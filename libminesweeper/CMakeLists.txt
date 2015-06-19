@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(libminesweeper)
 
-find_package(Boost REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-
 if(APPLE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 endif()

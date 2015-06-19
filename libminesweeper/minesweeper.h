@@ -22,10 +22,9 @@
 #define MINESWEEPER_H_INCLUDED
 
 #include <iostream>
+#include <random>
 #include <stdexcept>
 #include <vector>
-
-#include <boost/random/uniform_smallint.hpp>
 
 /** \brief Class for representing a Minesweeper game state
  * \note Methods beginning with \c p_ are "cheating functions". */
@@ -204,7 +203,7 @@ template<class RNG> void Minesweeper::rand_init(unsigned int mines, RNG& rng, in
     if(mState != GameState::uninitialized)
         throw std::runtime_error("The field has already been initialized");
 
-    boost::random::uniform_smallint<int> rdist(0, mRows-1), cdist(0, mCols-1);
+    std::uniform_int_distribution<int> rdist(0, mRows-1), cdist(0, mCols-1);
     for(; mines > 0; --mines)
     {
         int i, j;

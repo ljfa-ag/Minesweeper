@@ -23,8 +23,7 @@
 
 #include <ctime>
 #include <exception>
-
-#include <boost/random/mersenne_twister.hpp>
+#include <random>
 
 int MineCursesApp::run()
 {
@@ -141,7 +140,7 @@ bool MineCursesApp::make_move()
 {
     if(ms->state() == Minesweeper::GameState::uninitialized)
     {
-        boost::random::mt11213b rng(std::time(nullptr));
+        std::mt19937 rng(std::time(nullptr));
         ms->rand_init(mines, rng, ci, cj);
     }
     if(ms->click(ci, cj))
